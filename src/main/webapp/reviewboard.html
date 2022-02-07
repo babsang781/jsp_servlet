@@ -5,11 +5,11 @@
 <title>reviewboard</title>
 </head>
 <body>
+<form>
 	<table border="1" width="500">
 		<tr>
 			<td width="20%"><span id="board_num">1</span></td>
 			<td>영화 크루엘라 리뷰</td>
-
 		</tr>
 		<tr>
 			<td colspan="2">이런 저런 요소를 떠나서 영화 자체로서의 재미가 충분했다. 지금까지 봐온 디즈니의 실사
@@ -20,10 +20,76 @@
 				것으로 보인다.</td>
 		</tr>
 		<tr>
-			<td width="250" align="right"><input id="like_btn" type="button"
-				value="좋아요" onclick="like()"></td>
+			<td width="250" align="right">
+			<input id="like_btn" type="button"value="좋아요" onclick="like()"></td>
 			<td align="left"><span id="like_result"></span></td>
 		</tr>
+		<tr>
+			<td colspan="2">
+			<input type="text" size="50">
+			<input id="write_com" type="button" value="댓글작성"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<ul id="comments" style="list-style:none; padding:0"></ul>
+		</tr>
 	</table>
+	</form>
+	
+	<script src="./jquery-3.6.0.min.js"></script>
+	<script>
+	let num = 1;
+		$('#write_com').on('click', function(){
+			let com = $('input[type=text]').val();
+			$('#comments').append('<li class="com'+num+'">'+com+'<input type="button" value="댓글삭제"onclick="del('+num+')"></li>');
+			num++;
+			$('input[type=text]').val('');
+			
+		});
+		
+		function del(num){
+			$('.com'+num).remove();
+			
+		}
+		
+		function like(){
+			if($('#like_btn').val() =="좋아요"){
+				$.ajax({
+					type: "post",
+					data: {"board_num": $('#board_num').html()},
+					url: "likeService",
+					dataType: "text",
+					success: function(data){
+						alert(data);
+						$('#like_result').html(data);
+						$('#like_btn').val("좋아요 취소");
+						
+					},
+					error: function(){
+						alert("실패!");
+					}
+				});
+			}else{
+				$.ajax({
+					type: "post",
+					data: {"board_num": $('#board_num').html()},
+					url: "dislikeService",
+					dataType: "text",
+					success: function(data){
+						alert(data);
+						$('#like_result').html(data);
+						$('#like_btn').val("좋아요");
+					},
+					error: function(){
+						alert("실패!");
+					}
+				});
+			}
+		}
+		
+		
+		
+	</script>
+	
 </body>
 </html>
