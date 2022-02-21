@@ -69,9 +69,6 @@ body {
     
     <script>
     
-    
-    
-    
     function initMap() {
     	  const map = new google.maps.Map(document.getElementById("map"), {
     	    zoom: 8,
@@ -100,7 +97,6 @@ body {
     	    .geocode({ location: latlng })
     	    .then((response) => {
     	      if (response.results[0]) {
-
     	        const marker = new google.maps.Marker({
     	          position: latlng,
     	          map: map,
@@ -116,3 +112,7 @@ body {
     </script>
   </body>
 </html>
+
+
+
+

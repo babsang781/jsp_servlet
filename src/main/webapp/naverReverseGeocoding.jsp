@@ -9,7 +9,6 @@
 #map {
 	height: 300px;
 	width: 300px;
-	align: center;
 }
 </style>
 <script
@@ -19,23 +18,38 @@
 	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACh8pWLz6hMAzNdtVVUXqnXvqmoHvx5zI&language=ko&v=weekly&channel=2"
 		async></script>
-	<script>
 
+
+	<div id="map"></div>
+	<div class="latlng">
+		lat:
+		<div id="lat"></div>
+		lng:
+		<div id="lng"></div>
+	</div>
+
+	<div>
+		address:
+		<div id="address"></div>
+	</div>
+	<input id="latlng" type="text"></input>
+	<div id="latlng2" type="text"></div>
+	<button id="submit" type="button"> Reverse Geocode</button>
+
+	<script>
 // https://developers.google.com/maps/documentation/javascript/maptypes?hl=en
 // map API 를 사용하기 위한 maptype 오브젝트, 지도 타일을 웹에 문제 없이 보여주기 위한 것.
 // 각각의 맵 타입은 시각적 표시를 위해 몇몇의 함수와 프로퍼티 타일을 포함해야 함.
 // styled Maps or custom map tyes로 modify 해서 사용 가능
 
-// 
-	 let lat, lng;
 	 function initMap(){
-		 
 		// 맵 div에 맵 타입 변수를 만들고, "," 뒤에 Map option으로 내용을 넣음.
 		// google.maps.Map(document.getElementById('map'), [Map option]);
 		// Map option의 형태는 다양하게 나타날 수 있고,다양한 속성을 넣을 수도 안 넣을 수도 있음.  
 		
 		const map = new google.maps.Map(document.getElementById('map'), {
-		   center: {lat: -34.397, lng: 150.644},
+			zoom: 8,
+			center: {lat: 35.1, lng: 126.8},
 		 });
 		
 		// 위 내용을 보면 center: 값의 위치만 들어가 있지만 
@@ -83,27 +97,64 @@
 		
 		*/
 		
-		 
+   	  function infowindow(formatted_address){
+		  alert(formatted_address);
+	  };	
+		
+   	  document.getElementById("submit").addEventListener("click", () => {
+  	    geocodeLatLng(geocoder, map, infowindow);
+  	  });
+		
 	 }
-	 
+	
+	 function geocodeLatLng(geocoder, map, infowindow) {
+		   const input = document.getElementById("latlng").value;
+	   	   const latlngStr = input.split(",", 2);
+		   const latlng = {
+	   	    lat: parseFloat(latlngStr[0]),
+	   	    lng: parseFloat(latlngStr[1]),
+	   	  };
+
+	   	  geocoder
+	   	    .geocode({ location: latlng })
+	   	    .then((response) => {
+	   	      if (response.results[0]) {
+	   	    	const marker = new google.maps.Marker({
+	  	          position: latlng,
+	  	          map: map,
+	  	        });
+
+	   	        infowindow(response.results[0].formatted_address);
+	   	      } else {
+	   	        window.alert("No results found");
+	   	      }
+	   	    })
+	   	    .catch((e) => window.alert("Geocoder failed due to: " + e));
+	   	}
+		 
 	 function search() {
 	     // Try HTML5 geolocation.
 	     if (navigator.geolocation) {
-	         navigator
-	             .geolocation
-	             .getCurrentPosition((position) => {
-	                 lat = position.coords.latitude;
-	                 lng = position.coords.longitude;
+	         navigator.geolocation.getCurrentPosition(
+	        	(position) => {
+	        		const pos = {
+        				lat: position.coords.latitude,
+	        			lng: position.coords.longitude,
+	        		};
+	        		
 	                 document
 	                     .getElementById('lat')
-	                     .innerText = lat;
+	                     .innerText = parseFloat(position.coords.latitude);
 	                 document
 	                     .getElementById('lng')
-	                     .innerText = lng;
+	                     .innerText = parseFloat(position.coords.longitude);
+	                 document
+                     	                 
+	                 Coords(position.coords.latitude, position.coords.longitude);
 	                 
-	     			 geocodeLatLng(geocoder, map, infowindow);
-	     			 
-	             }, () => {
+	                 
+	             }, 
+	             () => {
 	                 handleLocationError(true, infoWindow, map.getCenter());
 	             });
 	     } else {
@@ -111,7 +162,6 @@
 	         handleLocationError(false, infoWindow, map.getCenter());
 	     }
 	 }
-
 	 // 에러 발생시 작동하는 함수
 	 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 	     infoWindow.setPosition(pos);
@@ -122,76 +172,22 @@
 	     );
 	     infoWindow.open(map);
 	 }
-	</script>
-	<script> search(); </script>
 
-	<div id="map"></div>
-	<div id="latlng">
-		lat:
-		<div id="lat"></div>
-		lng:
-		<div id="lng"></div>
-	</div>
+	 // search() 에서 좌표 값을 가져오는 callback 함수를 통해 데이터 변경
+	 function Coords(latMem, lngMem){
+		 typeof(latMem);
+		 
+		 let coordslatlng = latMem + "," + lngMem;
+		 console.log(coordslatlng);
+		 document.getElementById('latlng').innerText =coordslatlng;
+		 document.getElementById('latlng2').innerText =coordslatlng;
+		 // console.log($('#latlng').val()); 이건 안 나옴.
+		 console.log($('#latlng').text());
+	 }
+	 
+	 
+	 search();
 
-	<div>
-		address:
-		<div id="address"></div>
-	</div>
-
-
-	<div id="floating-panel">
-		<input id="" type="text" value="" /> <input id="submit" type="button"
-			value="Reverse Geocode" />
-	</div>
-
-	<div id="latlng"></div>
-
-	<script>
-	
-		var lt = $("#lat").text();
-		var lg = $("#lng").val();
-		console.log(lt);
-		console.log(lg);
-		
-		
-		
-		
-		function initMap2() {
-    	  const map = new google.maps.Map(document.getElementById("map"), {
-    	  });
-    	  
-    	  
-
-    	  document.getElementById("submit").addEventListener("click", () => {
-    	    geocodeLatLng(geocoder, map, infowindow);
-    	  });
-    	}
-
-    	function geocodeLatLng(geocoder, map, infowindow) {
-    	  const input = document.getElementById("latlng").value;
-    	  const latlngStr = input.split(",", 2);
-    	  const latlng = {
-    	    lat: lt,
-    	    lng: lg,
-    	  };
-
-    	  geocoder
-    	    .geocode({ location: latlng })
-    	    .then((response) => {
-    	      if (response.results[0]) {
-
-    	        const marker = new google.maps.Marker({
-    	          position: latlng,
-    	        });
-
-    	        infowindow(response.results[0].formatted_address);
-    	      } else {
-    	        window.alert("No results found");
-    	      }
-    	    })
-    	    .catch((e) => window.alert("Geocoder failed due to: " + e));
-    	}
-    	
 	</script>
 
 
