@@ -7,7 +7,7 @@
     /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
 #map {
-  height: 300px;
+  height: 400px;
 }
 
 /* Optional: Makes the sample page fill the window. */
@@ -69,7 +69,6 @@ body {
     	    zoom: 8,
     	    center: { lat: 35.1, lng: 126.8 },
     	  });
-    	  
     	  const geocoder = new google.maps.Geocoder();
     	  function infowindow(formatted_address){
     		  alert(formatted_address);

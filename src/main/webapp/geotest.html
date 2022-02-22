@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Geolocation</title>
+<style>
+#map {
+	height: 300px;
+	width: 300px;
+}
+</style>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</head>
+<body>
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACh8pWLz6hMAzNdtVVUXqnXvqmoHvx5zI&language=ko&v=weekly&channel=2&callback=initMap"
+		async></script>
+
+
+	<div id="map"></div>
+	<div class="latlng">
+		lat:
+		<div id="lat"></div>
+		lng:
+		<div id="lng"></div>
+	</div>
+
+	<div>
+		address:
+		<div id="address"></div>
+	</div>
+	<input id="latlng" type="text"></input>
+	<div id="latlng2" type="text"></div>
+	<button id="submit" type="button">Reverse Geocode</button>
+
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACh8pWLz6hMAzNdtVVUXqnXvqmoHvx5zI&language=ko&v=weekly&channel=2&callback=initMap"
+		async></script>
+
+	<script>
+// https://developers.google.com/maps/documentation/javascript/maptypes?hl=en
+// map API 를 사용하기 위한 maptype 오브젝트, 지도 타일을 웹에 문제 없이 보여주기 위한 것.
+// 각각의 맵 타입은 시각적 표시를 위해 몇몇의 함수와 프로퍼티 타일을 포함해야 함.
+// styled Maps or custom map tyes로 modify 해서 사용 가능
+		let infoWindow, pos, sampleLat, sampleLng;	
+		let geocoder;
+		let map;
+		let sampleLatLng;
+	
+	   	  
+	function initMap(){
+		
+		map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 8,
+			center: {lat: -0, lng: 100.8},
+		 });
+		
+		 infoWindow = new google.maps.InfoWindow();
+		 search();
+	 }
+	
+	
+	 function search() {
+	     // Try HTML5 geolocation.
+	     if (navigator.geolocation) {
+	         navigator.geolocation.getCurrentPosition(
+	        	(position) => {
+	        		pos = {
+        				lat: position.coords.latitude,
+	        			lng: position.coords.longitude,
+	        		};
+	        		
+	            
+				infoWindow.setPosition(pos);
+		        infoWindow.setContent("Location found.");
+		        infoWindow.open(map);
+		        map.setCenter(pos);
+	                 
+	             }, 
+	             () => {
+	                 handleLocationError(true, infoWindow, map.getCenter());
+	             });
+	     } else {
+	         // Browser doesn't support Geolocation
+	         handleLocationError(false, infoWindow, map.getCenter());
+	     }
+	 }
+	 
+	 // 에러 발생시 작동하는 함수
+	 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+	     infoWindow.setPosition(pos);
+	     infoWindow.setContent(
+	         browserHasGeolocation
+	             ? "Error: The Geolocation service failed."
+	             : "Error: Your browser doesn't support geolocation."
+	     );
+	     infoWindow.open(map);
+	 }
+
+
+</script>
