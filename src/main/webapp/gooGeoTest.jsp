@@ -98,7 +98,7 @@ body {
     	          map: map,
     	        });
 
-    	        infowindow(response.results[0].formatted_address);
+    	        infoWindow(response.results[0].formatted_address);
     	      } else {
     	        window.alert("No results found");
     	      }
