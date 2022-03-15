@@ -145,6 +145,7 @@
 	out.write("파일명: " + fileName + "<br>");
 	out.write("실제 파일명: " + fileRealPath + "<br>");
 	%>
+	
 	<div class="report-container b">
 		<form action="lostAniCreateCon.do" method="post">
 			<!-- header 박스 -->
